@@ -1,0 +1,27 @@
+version: '3.9'
+
+services:
+  # Web service for the Django application
+  web:
+    build: .  # Build using Dockerfile in current directory
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+    volumes:
+      - .:/code  # Mount current directory to /code in the container
+    ports:
+      - "8000:8000"  # Map host port 8000 to container port 8000
+    depends_on:
+      - db  # Ensure the db service starts before this one
+
+  # Database service for PostgreSQL
+  db:
+    image: postgres:13
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/  # Persistent volume for database data
+    environment:
+      - "POSTGRES_HOST_AUTH_METHOD=trust"  # Allow connection without password (development only!)
+
+volumes:
+  postgres_data:  # Declare a volume for persistent database storage
+
+
+  
